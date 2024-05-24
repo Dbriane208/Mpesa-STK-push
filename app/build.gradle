@@ -1,0 +1,79 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'daniel.brian.mpesa'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "daniel.brian.mpesa"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    // added this to export com.sun.tools
+    tasks.withType(JavaCompile).configureEach{
+        options.fork = true
+        options.forkOptions.jvmArgs +=[
+                '--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+                '--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+                '--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED']
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    /*
+    - configuring the consumer key and secret
+    */
+    buildTypes.each {
+        it.buildConfigField 'String', 'CONSUMER_KEY', DARAJA_CONSUMER_KEY
+        it.buildConfigField 'String', 'CONSUMER_SECRET', DARAJA_CONSUMER_SECRET
+    }
+
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true // Enable custom BuildConfig fields feature
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+
+    implementation libs.butterknife
+    annotationProcessor libs.butterknife.compiler
+    implementation libs.timber
+
+//    implementation libs.networkmanager
+
+    implementation libs.library
+
+    implementation libs.retrofit
+    implementation libs.converter.gson
+
+    implementation libs.okhttp
+    implementation libs.logging.interceptor
+
+    implementation libs.gson
+    implementation libs.okio
+
+}
